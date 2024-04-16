@@ -259,7 +259,7 @@
 {#if disabled}
     <div class="absolute top-0 left-0 w-full h-full bg-black opacity-50 z-10"></div>
 {:else}
-    <div class="flex h-screen touch-none select-none">
+    <div class="flex touch-none select-none">
         <div class="grid grid-rows-4 grid-cols-4 gap-3 p-4 m-auto bg-[#4c5f49] border-8 border-[#A4E593] rounded-2xl">
             {#each board.board as row, r}
                 {#each row as letter, c}

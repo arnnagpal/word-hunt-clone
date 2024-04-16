@@ -10,7 +10,21 @@ export let data: PageData;
 	<meta name="description" content="Word Hunt - Maddie ❣️" />
 </svelte:head>
 
-<div class="overflow-y-hidden">
-	<Game board={data.board}/>
+<div class="overflow-y-hidden bg-repeat bg-page-game-background bg-cover bg-center h-screen flex flex-col justify-between items-center">
+	<div class="flex flex-col items-center h-1/4">
+		<div>
+			<!--		game header   -->
+
+		</div>
+		<div>
+			<!--		Timer   -->
+		</div>
+	</div>
+
+	<div class="flex flex-col justify-center items-center h-3/4">
+		<div>
+			<Game board={data.board}/>
+		</div>
+	</div>
 </div>
 

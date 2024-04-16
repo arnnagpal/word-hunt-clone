@@ -74,6 +74,7 @@
         line.style.left = left + 'px';
         line.style.height = H + 'px';
         line.style.backgroundColor = color;
+				line.style.borderRadius = `${thickness/2}px`; // Apply rounded corners
         line.style.width = thickness + 'px';
         line.style.opacity = String(opacity);
     }
@@ -132,5 +133,5 @@
 
 </script>
 
-<div class="absolute mt-[-1px]" bind:this={line}>
+<div class="absolute -ml-0.5" bind:this={line}>
 </div>
