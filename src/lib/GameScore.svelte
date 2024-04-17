@@ -1,0 +1,11 @@
+<script lang="ts">
+    export let word: string;
+    export let points: number;
+</script>
+
+<div class="rounded-2xl bg-[#A4E593] shadow-2xl shadow-black z-40">
+    <div class="flex justify-between items-center px-4 py-2">
+        <h1 class="text-2xl font-bold text-[#1A1A1A] text-opacity-85 -mt-1 pb-1">{ word }</h1>
+        <h1 class="text-2xl font-bold text-[#1A1A1A] text-opacity-85 -mt-1 pb-1">&nbsp;(+{ points })</h1>
+    </div>
+</div>

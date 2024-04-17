@@ -8,6 +8,16 @@ type BoardSolution = {
     points: number;
 };
 
+type ScoreEvent = {
+    word: string;
+    points: number;
+};
+
+type TimeOverEvent = {
+    words: number;
+    score: number;
+};
+
 export enum WordSelectionState {
     NewWord,
     OldWord,

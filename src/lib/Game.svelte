@@ -2,7 +2,7 @@
     import {createEventDispatcher, onDestroy, onMount} from "svelte";
     import Line from "$lib/Line.svelte";
 
-    import {Board, getPoints, WordSelectionState} from "ambient";
+    import {Board, getPoints, type ScoreEvent, WordSelectionState} from "ambient";
 
     export let board: Board;
 
@@ -182,7 +182,7 @@
         // todo: validate word
         if (selectionStatus === WordSelectionState.NewWord) {
             wordBank.push(selected.map((value) => grid[Math.floor(value / columns)][value % columns]).join(''));
-            dispatch('newWord', {word: wordBank[wordBank.length - 1], points: getPoints(wordBank[wordBank.length - 1])})
+            dispatch('score', {word: wordBank[wordBank.length - 1], points: getPoints(wordBank[wordBank.length - 1])} as ScoreEvent)
         }
 
         clearSelection();
