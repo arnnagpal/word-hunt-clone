@@ -2,7 +2,7 @@
     import Game from '$lib/Game.svelte';
     import type { PageData } from './$types';
     import GameHeader from '$lib/GameHeader.svelte';
-    import { type ScoreEvent, type TimeOverEvent, WordSelectionState } from 'ambient';
+    import { type ScoreEvent, WordSelectionState } from 'ambient';
     import GameScore from '$lib/GameScore.svelte';
 
     export let data: PageData;
@@ -19,6 +19,8 @@
 
 	// eslint-disable-next-line no-undef
 	let showScoreInterval: NodeJS.Timeout;
+
+	let animateScore = false;
 
 	function scoreChange(event: CustomEvent<ScoreEvent>) {
 		score += event.detail.points;
@@ -38,6 +40,7 @@
 		lastWord = event.detail.word;
 		lastPoints = event.detail.points;
 
+		animateScore = false;
 		showScore = true;
 		if (showScoreInterval) clearTimeout(showScoreInterval);
 	}
@@ -45,16 +48,19 @@
 	function endDragEvent() {
 		if (showScoreInterval) clearTimeout(showScoreInterval);
 		showScore = true;
+		animateScore = true;
+
 		showScoreInterval = setTimeout(() => {
 			showScore = false;
+			animateScore = false;
 			lastWord = '';
 			lastPoints = 0;
 			selectionStatus = WordSelectionState.NoWord;
-		}, 1000);
+		}, 500);
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	function timeOver(event: CustomEvent<TimeOverEvent>) {
+	function timeOver() {
 		console.log('Time Over');
 		gameDisabled = true;
 	}
@@ -76,7 +82,7 @@
 	<div class="flex flex-col items-center w-screen h-[15vh] mt-20">
 		<!--    game score on top of board -->
 		{#if showScore}
-			<GameScore bind:word={lastWord} bind:points={lastPoints} bind:selectionStatus={selectionStatus} />
+			<GameScore bind:animate={animateScore} bind:word={lastWord} bind:points={lastPoints} bind:selectionStatus={selectionStatus} />
 		{/if}
 	</div>
 

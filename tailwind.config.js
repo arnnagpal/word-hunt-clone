@@ -24,10 +24,30 @@ export default {
                     '100%': {
                         transform: 'scale(105%)',
                     }
+                },
+                'fade-out-expand': {
+                    '0%': {
+                        opacity: '1',
+                        transform: 'scale(100%)',
+                    },
+                    '100%': {
+                        opacity: '0',
+                        transform: 'scale(110%)',
+                    }
+                },
+                'fade-out': {
+                    '0%': {
+                        opacity: '1',
+                    },
+                    '100%': {
+                        opacity: '0',
+                    }
                 }
             },
             animation: {
                 'jump': 'jump 500ms ease-in-out',
+                'fade-out-expand': 'fade-out-expand 500ms ease-in-out',
+                'fade-out': 'fade-out 500ms ease-in-out',
             },
         },
     },
