@@ -10,6 +10,11 @@ export default {
                 'letterBackground-Yellow': "linear-gradient(rgba(254, 251, 146, 0.6),rgba(254, 251, 146, 0.6)), url('/assets/letter_bg.png')",
                 'page-game-background': "url('/assets/background.png')",
             },
+            hueRotate: {
+                '-270': '-270deg',
+                270: '270deg',
+                190: '190deg'
+            },
             keyframes: {
                 'jump': {
                     '0%': {
