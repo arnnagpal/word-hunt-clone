@@ -9,6 +9,7 @@ type BoardSolution = {
 };
 
 type ScoreEvent = {
+    selectionStatus: WordSelectionState
     word: string;
     points: number;
 };
@@ -17,6 +18,13 @@ type TimeOverEvent = {
     words: number;
     score: number;
 };
+
+export enum Direction {
+    Up,
+    Down,
+    Left,
+    Right,
+}
 
 export enum WordSelectionState {
     NewWord,
@@ -43,7 +51,7 @@ export const getPoints = (word: string): number => {
     }
 }
 
-declare var Position: {
+declare const Position: {
     prototype: Position;
     new(): Position;
 };
@@ -98,7 +106,7 @@ export class Board {
     };
 }
 
-declare var BoardSolution: {
+declare const BoardSolution: {
     prototype: BoardSolution;
     new(): BoardSolution;
 };

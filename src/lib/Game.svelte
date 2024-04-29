@@ -102,7 +102,7 @@
                     from: previousElement,
                     to: currentElement,
                     opacity: 0.5,
-                    color: getLineColor()
+                    color: getLineColor(),
                 }
             });
 
@@ -151,6 +151,7 @@
 
 
     async function toggle(r: number, c: number) {
+        let grid = board.board;
         state[r * columns + c] = !state[r * columns + c];
 
         if (state[r * columns + c]) {
@@ -160,6 +161,10 @@
         }
 
         await checkWord();
+
+        const word = selected.map((value) => grid[Math.floor(value / columns)][value % columns]).join('');
+        dispatch('selection', {selectionStatus: selectionStatus, word: word, points: getPoints(word)} as ScoreEvent);
+
         eraseLines();
         drawLines();
     }
@@ -173,6 +178,8 @@
 
         isDrag = false;
 
+        if (selected.length > 0)
+            dispatch('endDrag', {});
 
         if (selected.length < 3) {
             clearSelection();
@@ -182,11 +189,10 @@
         // todo: validate word
         if (selectionStatus === WordSelectionState.NewWord) {
             wordBank.push(selected.map((value) => grid[Math.floor(value / columns)][value % columns]).join(''));
-            dispatch('score', {word: wordBank[wordBank.length - 1], points: getPoints(wordBank[wordBank.length - 1])} as ScoreEvent)
+            dispatch('score', {selectionStatus: selectionStatus, word: wordBank[wordBank.length - 1], points: getPoints(wordBank[wordBank.length - 1])} as ScoreEvent);
         }
 
         clearSelection();
-
         selectionStatus = WordSelectionState.NoWord;
     }
 
