@@ -48,6 +48,8 @@
 
             idToElement[i] = doc;
         }
+        toggle(0, 0);
+        toggle(0, 1);
     });
 
     onDestroy(() => {
@@ -90,26 +92,27 @@
             return;
         }
 
-        let previous = selected[0];
+        let start = idToElement[selected[0]];
+        let joints = [];
+
         for (let i = 1; i < selected.length; i++) {
             let current = selected[i];
-            let previousElement = idToElement[previous];
             let currentElement = idToElement[current];
 
-            let line = new Line({
-                target: document.body,
-                props: {
-                    from: previousElement,
-                    to: currentElement,
-                    opacity: 0.5,
-                    color: getLineColor(),
-                }
-            });
-
-            lines.push(line);
-
-            previous = current;
+            joints.push(currentElement);
         }
+
+        let line = new Line({
+            target: document.body,
+            props: {
+                start: start,
+                joints: joints,
+                opacity: 0.5,
+                color: getLineColor(),
+            }
+        });
+
+        lines.push(line);
     }
 
     function getState(r: number, c: number): boolean {
