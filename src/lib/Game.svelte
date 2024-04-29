@@ -48,8 +48,6 @@
 
             idToElement[i] = doc;
         }
-        toggle(0, 0);
-        toggle(0, 1);
     });
 
     onDestroy(() => {
@@ -288,8 +286,9 @@
                             class="w-16 h-16 flex items-center relative
                             justify-center cursor-pointer shadow-lg shadow-black
                              border-opacity-10 rounded-md
-                            transition-colors duration-200 ease-in-out
+                            transition-all duration-200 ease-in-out
                             bg-no-repeat bg-cover bg-center
+                            {state[r * columns + c] ? 'animate-jump transform scale-105' : 'transform scale-100'}
                             {state[r * columns + c] ? letterBoxColors[selectionStatus] : 'bg-letterBackground text-black'}
             "
                     >
