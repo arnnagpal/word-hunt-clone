@@ -2,48 +2,86 @@
     import {createEventDispatcher, onMount} from "svelte";
     import type {TimeOverEvent} from "ambient";
 
-export let words: number = 0;
-export let score: number = 0;
+    export let words: number = 0;
+    export let score: number = 0;
 
-export let time = -1;
+    export let time = -1;
 
-const dispatch = createEventDispatcher();
+    const dispatch = createEventDispatcher();
 
-onMount(() => {
-    if (time === -1) return;
+    let displayScore = score;
+    let oldScore = score;
 
-    const timer = setInterval(() => {
-        time--;
+    let animatingInterval: NodeJS.Timeout | null = null;
 
-        if (time === 0) {
-            dispatch('timeup', {"words": words, "score": score} as TimeOverEvent);
+    onMount(() => {
+        if (time === -1) return;
+
+        const timer = setInterval(() => {
+            time--;
+
+            if (time === 0) {
+                dispatch('timeup', {"words": words, "score": score} as TimeOverEvent);
+                clearInterval(timer);
+            }
+        }, 1000);
+
+        return () => {
             clearInterval(timer);
         }
-    }, 1000);
+    });
 
-    return () => {
-        clearInterval(timer);
-    }
-});
+    function fancyTimeFormat(duration: number) {
+        const hrs = ~~(duration / 3600);
+        const mins = ~~((duration % 3600) / 60);
+        const secs = ~~duration % 60;
 
-function fancyTimeFormat(duration: number) {
-    // Hours, minutes and seconds
-    const hrs = ~~(duration / 3600);
-    const mins = ~~((duration % 3600) / 60);
-    const secs = ~~duration % 60;
+        let ret = "";
+        if (hrs > 0) {
+            ret += `${hrs}:${mins < 10 ? "0" : ""}`;
+        }
 
-    // Output like "1:01" or "4:03:59" or "123:03:59"
-    let ret = "";
-
-    if (hrs > 0) {
-        ret += "" + hrs + ":" + (mins < 10 ? "0" : "");
+        ret += `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+        return ret;
     }
 
-    ret += "" + mins + ":" + (secs < 10 ? "0" : "");
-    ret += "" + secs;
 
-    return ret;
-}
+    function easeInOutQuad(t: number) {
+        return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+    }
+
+    function animateScore(oldScore: number, newScore: number, duration: number) {
+        if (animatingInterval) return;
+        const start = performance.now();
+
+        animatingInterval = setInterval(() => {
+            const now = performance.now();
+            const rawProgress = Math.min((now - start) / duration, 1);
+            const progress = easeInOutQuad(rawProgress);
+
+            displayScore = oldScore + (newScore - oldScore) * progress;
+
+            if (progress >= 1) {
+                clearInterval(animatingInterval as NodeJS.Timeout);
+                animatingInterval = null;
+            }
+        }, 16); // 16ms for roughly 60fps
+    }
+
+    $: {
+        if (oldScore !== score) {
+            if (animatingInterval) {
+                clearInterval(animatingInterval as NodeJS.Timeout);
+                animatingInterval = null;
+            }
+
+            oldScore = score;
+        }
+
+        if (Math.abs(score - displayScore) > 0.5) {
+            animateScore(displayScore, score, 500); // 1000ms = 1 second duration
+        }
+    }
 </script>
 
 
@@ -53,11 +91,11 @@ function fancyTimeFormat(duration: number) {
     <div class="flex justify-center items-center bg-white w-[74vw] h-20 rounded-b-xl">
         <div class="flex flex-col text-left">
             <p class="text-xl font-extrabold -mb-2">WORDS: {words}</p>
-            <p class="text-3xl font-extrabold">SCORE: {String(score).padStart(4, '0')}</p>
+            <p class="text-3xl font-extrabold">SCORE: {Math.round(displayScore).toString().padStart(4, '0')}</p>
         </div>
     </div>
 
-<!--    on the right side of the game header -->
+    <!--    on the right side of the game header -->
     {#if time > -1}
         <div class="flex justify-center items-center bg-green-950 bg-opacity-40 text-white text-center w-[18vw] rounded-b-xl ml-auto mr-4">
             <p class="text-md font-bold pb-0.5">{fancyTimeFormat(time)}</p>

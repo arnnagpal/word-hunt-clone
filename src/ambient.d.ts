@@ -47,6 +47,10 @@ export const getPoints = (word: string): number => {
         case 8:
             return 2200;
         default:
+            if (word.length > 8) {
+                return (400 * word.length) - 1000
+            }
+
             return 0;
     }
 }
@@ -65,7 +69,14 @@ export class Board {
 
     constructor(size: number) {
         this.size = size;
-        this.board = Array(size).fill('').map(() => Array(size).fill(''));
+
+        this.board = [];
+        for(let i = 0; i < size; i++) {
+            this.board[i] = [];
+            for(let j = 0; j < size; j++) {
+                this.board[i][j] = "";
+            }
+        }
     }
 
     get_from_pos = (pos: Position): string => {
@@ -77,7 +88,7 @@ export class Board {
     set_from_pos = (pos: Position, value: string): void => {
         this.set_from_coords(pos.x, pos.y, value);
     };
-    set_from_coords = (x: number, y: number, value: string): void => {
+    set_from_coords = (y: number, x: number, value: string): void => {
         this.board[x][y] = value;
     };
 

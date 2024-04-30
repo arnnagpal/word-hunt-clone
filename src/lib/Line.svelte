@@ -60,5 +60,5 @@
 </script>
 
 
-<svg class="absolute top-0 left-0 z-[1] w-full h-full pointer-events-none" bind:this={svg}>
+<svg class="absolute top-0 left-0 z-[1] w-full h-full pointer-events-none filter " bind:this={svg}>
 </svg>
