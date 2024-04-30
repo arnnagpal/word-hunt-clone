@@ -68,8 +68,8 @@
 </script>
 
 <svelte:head>
-	<title>Word Hunt - Maddie ❣️</title>
-	<meta content="Word Hunt - Maddie ❣️" name="description" />
+	<title>Word Hunt - In Game</title>
+	<meta content="Word Hunt - In Game" name="description" />
 </svelte:head>
 
 <div class="flex flex-col justify-between items-center">

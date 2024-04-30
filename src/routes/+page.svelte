@@ -1,6 +1,10 @@
 <script lang="ts">
 </script>
 
+<svelte:head>
+    <title>Word Hunt - Home</title>
+    <meta content="Word Hunt - Home" name="description" />
+</svelte:head>
 
 <div class="flex justify-center items-center h-screen">
     <div class="flex justify-around flex-col bg-white w-[85vw] h-[45vh] rounded-lg shadow-2xl p-2 pl-6 pr-6">
