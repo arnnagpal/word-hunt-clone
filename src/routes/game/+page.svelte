@@ -72,14 +72,11 @@
 	<meta content="Word Hunt - Maddie ❣️" name="description" />
 </svelte:head>
 
-<div
-	class="overflow-y-hidden filter bg-repeat bg-page-game-background bg-cover bg-center
+<div class="flex flex-col justify-between items-center">
 
-
-	h-screen flex flex-col justify-between items-center">
 	<div class="flex flex-col items-center h-1/4">
 		<!--		game header   -->
-		<GameHeader bind:score={score} bind:words={wordCount} on:timeup={timeOver} time={-1} />
+		<GameHeader bind:score={score} bind:words={wordCount} on:timeup={timeOver} time={90} />
 	</div>
 
 	<div class="flex flex-col items-center w-screen h-[15vh] mt-20">
@@ -95,5 +92,6 @@
 						on:endDrag={endDragEvent} />
 		</div>
 	</div>
+
 </div>
 

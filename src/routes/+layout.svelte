@@ -2,5 +2,7 @@
     import "../app.css";
 </script>
 
-
-<slot/>
+<div class="overflow-y-hidden filter bg-repeat bg-page-game-background bg-cover bg-center
+        	h-screen">
+    <slot/>
+</div>
