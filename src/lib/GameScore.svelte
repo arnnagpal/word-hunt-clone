@@ -16,7 +16,7 @@
 
 <div class="rounded-2xl {selectionStateToColor[selectionStatus]}
 						shadow-2xl shadow-black z-40
-            ease-in-out filter hue-rotate-180
+            ease-in-out filter
 						{animate ? (selectionStatus === WordSelectionState.NewWord ? 'animate-fade-out-expand opacity-0' : 'animate-fade-out opacity-0') : ''}">
 	<div class="flex justify-between items-center px-4 py-2">
 		<h1 class="text-2xl font-bold text-[#1A1A1A] text-opacity-85 -mt-1 pb-1">{ word }</h1>

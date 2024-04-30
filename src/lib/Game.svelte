@@ -288,7 +288,7 @@
                              border-opacity-10 rounded-md
                             transition-all duration-200 ease-in-out
                             bg-no-repeat bg-cover bg-center
-                            filter hue-rotate-180
+                            filter
                             {state[r * columns + c] ? 'animate-jump transform scale-105' : 'transform scale-100'}
                             {state[r * columns + c] ? letterBoxColors[selectionStatus] : 'bg-letterBackground text-black'}
             "

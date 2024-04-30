@@ -73,7 +73,10 @@
 </svelte:head>
 
 <div
-	class="overflow-y-hidden filter hue-rotate-180 bg-repeat bg-page-game-background bg-cover bg-center h-screen flex flex-col justify-between items-center">
+	class="overflow-y-hidden filter bg-repeat bg-page-game-background bg-cover bg-center
+
+
+	h-screen flex flex-col justify-between items-center">
 	<div class="flex flex-col items-center h-1/4">
 		<!--		game header   -->
 		<GameHeader bind:score={score} bind:words={wordCount} on:timeup={timeOver} time={-1} />

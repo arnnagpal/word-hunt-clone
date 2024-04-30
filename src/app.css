@@ -13,3 +13,17 @@
 
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    .purple-theme {
+        @apply filter hue-rotate-180
+    }
+
+    .green-theme {
+        @apply filter
+    }
+
+    .blue-theme {
+        @apply filter hue-rotate-90
+    }
+}
