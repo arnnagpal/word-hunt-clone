@@ -2,14 +2,14 @@ import { error } from '@sveltejs/kit';
 import {dictionary} from "$lib/server/dictionary";
 import type { RequestHandler } from './$types';
 
-export const GET: RequestHandler = ({ url }) => {
+export const GET: RequestHandler = async ({ url }) => {
     const word = url.searchParams.get('word');
 
     if (!word) {
         error(400, 'word must be provided');
     }
 
-    let wordToCheck = word.toUpperCase();
+    const wordToCheck = word.toUpperCase();
 
     const result = dictionary.hasSubString(wordToCheck, true);
 

@@ -2,7 +2,6 @@ import type {RequestHandler} from "../../../../.svelte-kit/types/src/routes/api/
 import {error} from "@sveltejs/kit";
 import {Board, type BoardSolution, getPoints, type Position} from "ambient";
 import {dictionary, letterFrequency} from "$lib/server/dictionary";
-import * as fs from "fs";
 
 export const GET: RequestHandler = async ({url}) => {
     const size = url.searchParams.get('size');
@@ -43,7 +42,7 @@ const binarySearch = (arr: number[], target: number): number => {
     let right = arr.length - 1;
 
     while (left < right) {
-        let mid = Math.floor((left + right) / 2);
+        const mid = Math.floor((left + right) / 2);
         if (arr[mid] < target) {
             left = mid + 1;
         } else {
@@ -59,7 +58,7 @@ const generateBoard = (size: number): Board => {
     const letters = Object.keys(letterFrequency);
     const frequencySum = Object.values(letterFrequency).reduce((a, b) => a + b, 0);
 
-    let cumulativeFrequency: number[] = [];
+    const cumulativeFrequency: number[] = [];
     let sum = 0;
 
     for (let i = 0; i < letters.length; i++) {
@@ -69,8 +68,8 @@ const generateBoard = (size: number): Board => {
 
     for (let i = 0; i < size; i++) {
         for (let j = 0; j < size; j++) {
-            let rand = Math.floor(Math.random() * frequencySum);
-            let k = binarySearch(cumulativeFrequency, rand);
+            const rand = Math.floor(Math.random() * frequencySum);
+            const k = binarySearch(cumulativeFrequency, rand);
             board.set_from_coords(i, j, letters[k]);
         }
     }
@@ -78,7 +77,7 @@ const generateBoard = (size: number): Board => {
     return board;
 }
 
-function backTrack(board: Board, currentWord: string, currentCell: Position, path: Position[], depth: number, foundWord: (arg0: any) => void) {
+function backTrack(board: Board, currentWord: string, currentCell: Position, path: Position[], depth: number, foundWord: (arg0: string) => void) {
     // Check if current word is in dictionary
     if (currentWord.length >= 3 && dictionary.hasSubString(currentWord, true)) {
         // console.log(`backtrack: ${currentWord}, ${currentCell}, ${depth}, ${this.board.length}`)
