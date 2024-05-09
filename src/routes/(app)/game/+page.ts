@@ -1,4 +1,4 @@
-import type { PageLoad } from './$types';
+import type { PageLoad } from './$types'
 import {Board} from "ambient";
 
 export const ssr = false;

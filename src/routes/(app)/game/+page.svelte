@@ -1,6 +1,6 @@
 <script lang="ts">
     import Game from '$lib/Game.svelte';
-    import type { PageData } from './$types';
+    import type { PageData } from '../../../../.svelte-kit/types/src/routes';
     import GameHeader from '$lib/GameHeader.svelte';
     import { type ScoreEvent, WordSelectionState } from 'ambient';
     import GameScore from '$lib/GameScore.svelte';
