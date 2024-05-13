@@ -19,7 +19,7 @@
         timeoutMs: 8000
     });
 
-    const {form: formData, enhance, delayed, timeout} = form;
+    const {form: formData, enhance, delayed, timeout, submitting} = form;
 </script>
 
 <form action="?/signup" class="flex flex-col justify-center items-center" method="POST" use:enhance>
@@ -81,7 +81,7 @@
                       font-bold py-3 px-10 rounded shadow-xl mb-5">Register
     </Form.Button>
 
-    {#if $delayed || $timeout}
+    {#if $delayed || $timeout || $submitting}
         <WaitingSpinner/>
     {/if}
 </form>

@@ -1,6 +1,6 @@
 <script lang="ts">
     import {Circle3} from 'svelte-loading-spinners';
-
+    import {fade} from "svelte/transition";
     // colors for each ball
     // color scheme is shades of green
 
@@ -10,7 +10,7 @@
     // ballBottomRight: '#006600',
 </script>
 
-<div class="z-50 fixed transform top-1/2
+<div in:fade class="z-50 fixed transform top-1/2
                 left-1/2 translate-x-[-50%] translate-y-[-50%] w-screen
                 h-screen self-center bg-gray-600 bg-opacity-50
                 pointer-events-auto flex justify-center items-center

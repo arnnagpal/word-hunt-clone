@@ -2,7 +2,10 @@ import mongoose from 'mongoose';
 import { MongodbAdapter } from '@lucia-auth/adapter-mongodb';
 import dotenv from 'dotenv';
 import { GamePlayer, UserRoleType } from 'ambient';
-dotenv.config();
+
+if (!process.env.MONGO_URL) {
+	dotenv.config();
+}
 
 
 const url = process.env.MONGO_URL;
@@ -81,9 +84,17 @@ const gameSchema =
 				type: String,
 				required: true
 			},
+			session_type: {
+				type: Number,
+				required: true
+			},
 			players: {
 				type: [GamePlayer],
 				required: true
+			},
+			winner: {
+				type: String,
+				required: false
 			},
 			board: {
 				type: [String],
@@ -99,10 +110,6 @@ const gameSchema =
 			},
 			single_player: {
 				type: Boolean,
-				required: true
-			},
-			session_type: {
-				type: Number,
 				required: true
 			}
 		} as const,

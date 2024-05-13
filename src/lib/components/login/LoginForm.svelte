@@ -24,7 +24,7 @@
         timeoutMs: 8000
     });
 
-    const {form: formData, enhance, delayed, timeout} = form;
+    const {form: formData, enhance, delayed, timeout, submitting} = form;
 
     let errorDialog = false;
     let errorMessage = "";
@@ -68,7 +68,7 @@
         </AlertDialog.Content>
     </AlertDialog.Root>
 
-    {#if $delayed || $timeout}
+    {#if $delayed || $timeout || $submitting}
         <WaitingSpinner/>
     {/if}
 </form>

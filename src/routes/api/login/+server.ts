@@ -16,10 +16,6 @@ export const POST: RequestHandler = async ({request}) => {
 
     const user = await User.findOne({username}).exec();
 
-    if (!user) {
-        return error(400, "Invalid username/email or password");
-    }
-
     const validPassword = await verify(user.password_hash, password, {
         memoryCost: 19456,
         timeCost: 2,
@@ -27,8 +23,12 @@ export const POST: RequestHandler = async ({request}) => {
         parallelism: 1
     });
 
+    if (!user) {
+        return error(400, "Invalid username/email or password");
+    }
+
     if (!validPassword) {
-        return error(400, "Invalid username/email or passowrd");
+        return error(400, "Invalid username/email or password");
     }
 
     const session = await lucia.createSession(user.id, {});

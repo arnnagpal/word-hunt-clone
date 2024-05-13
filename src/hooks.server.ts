@@ -2,6 +2,7 @@ import { read } from "$app/server";
 import { dictionary, letterFrequency } from "$lib/server/dictionary";
 import type { Handle } from '@sveltejs/kit';
 import { lucia } from '$lib/server/auth';
+import {redis} from "$lib/server/redis";
 
 
 console.log("hooks.server - starting sveltekit server");
@@ -60,8 +61,4 @@ export const handle: Handle = async ({ event, resolve }) => {
     return resolve(event);
 };
 
-
-
-
-
-
+console.log(`Redis ping: ${await redis.ping()}`);

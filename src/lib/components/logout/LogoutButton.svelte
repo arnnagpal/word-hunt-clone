@@ -2,8 +2,10 @@
     import {superForm} from "sveltekit-superforms";
     import type {PageData} from "./$types";
     import WaitingSpinner from "$lib/WaitingSpinner.svelte";
+    import {fade} from "svelte/transition";
 
     import * as Form from "$lib/components/ui/form";
+    import {LogOut} from "lucide-svelte";
 
     export let data: PageData;
 
@@ -12,18 +14,18 @@
         timeoutMs: 8000
     });
 
-    const {enhance, delayed, timeout} = form;
+    const {enhance, delayed, timeout, submitting} = form;
 </script>
 
 
 <form action="?/logout" class="flex flex-col justify-center items-center" method="POST" use:enhance>
-    <Form.Button class="mt-4 bg-[#A4E593]
-                      transition-all duration-200 ease-in-out
-                      hover:bg-[#8dde78] text-gray-900 text-xl
-                      font-bold py-3 px-10 rounded shadow-xl mb-5">Logout
+    <Form.Button class="rotate-180 transition-all duration-200 ease-in-out
+                 text-gray-900 text-4xl
+                      font-bold rounded" variant="ghost">
+        <LogOut />
     </Form.Button>
 
-    {#if $delayed || $timeout}
-        <WaitingSpinner/>
+    {#if $delayed || $timeout || $submitting}
+        <WaitingSpinner />
     {/if}
 </form>

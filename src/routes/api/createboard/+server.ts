@@ -21,8 +21,16 @@ export const GET: RequestHandler = async ({url}) => {
     }
 
     // time the generation and solving of the board separately and print it
+    const board = await createBoard(board_size);
+
+    return new Response(JSON.stringify({
+        board: board
+    }));
+};
+
+export const createBoard = async (size: number) => {
     console.time('generateBoard');
-    const board = generateBoard(board_size);
+    const board = generateBoard(size);
     console.timeEnd('generateBoard');
 
     console.time('solveBoard');
@@ -31,11 +39,8 @@ export const GET: RequestHandler = async ({url}) => {
 
     board.possible_solutions = solutions;
     board.total_possible_score = solutions.reduce((acc, solution) => acc + solution.points, 0);
-
-    return new Response(JSON.stringify({
-        board: board
-    }));
-};
+    return board;
+}
 
 const binarySearch = (arr: number[], target: number): number => {
     let left = 0;
@@ -53,7 +58,7 @@ const binarySearch = (arr: number[], target: number): number => {
     return left;
 }
 
-const generateBoard = (size: number): Board => {
+export const generateBoard = (size: number): Board => {
     const board = new Board(size);
     const letters = Object.keys(letterFrequency);
     const frequencySum = Object.values(letterFrequency).reduce((a, b) => a + b, 0);
@@ -99,7 +104,7 @@ function backTrack(board: Board, currentWord: string, currentCell: Position, pat
     }
 }
 
-function solveBoard(board: Board): BoardSolution[] {
+export function solveBoard(board: Board): BoardSolution[] {
     const solutions: BoardSolution[] = [];
     const words: string[] = [];
     const foundWord = (word: string) => {
