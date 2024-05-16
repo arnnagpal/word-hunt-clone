@@ -1,6 +1,19 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import mongoose from 'mongoose';
 
+export enum UpdateType {
+	LetterSelection,
+	ClearSelection,
+	SubmitSelection,
+	TimeUpdate,
+	JoinedGame
+}
+
+export enum GamePreset {
+	Classic = 90,
+	Unlimited = -1
+}
+
 export enum UserRole {
 	Admin = 'admin',
 	User = 'user'
@@ -27,7 +40,7 @@ export class UserRoleType extends mongoose.SchemaType {
 
 export class GamePlayer extends mongoose.SchemaType {
 	id: string;
-	name: string;
+	words: string[];
 	score: number;
 
 	constructor(key, options) {
@@ -41,68 +54,18 @@ export class GamePlayer extends mongoose.SchemaType {
 		}
 
 		// check if val is a valid GamePlayer object
-		if (!val.id || !val.name || !val.score) {
+		if (!val.id || !val.words || !val.score) {
 			throw new Error('GamePlayer: val is not a valid GamePlayer object');
 		}
 
 		return {
 			id: val.id,
-			name: val.name,
+			words: val.words,
 			score: val.score
 		};
 	}
 }
 
-export class GameSession extends mongoose.SchemaType {
-	id: string;
-	players: GamePlayer[];
-	board: Board;
-
-	time_left?: number;
-
-	created_at: Date;
-	ended_at?: Date;
-
-	single_player: boolean;
-	session_type: SessionType;
-
-	constructor(key, options) {
-		super(key, options, 'GameSession');
-	}
-
-	cast(val) {
-		if (val == null) return {};
-		if (typeof val !== 'object') {
-			throw new Error('GameSession: val is not an object');
-		}
-
-		// check if val is a valid GameSession object
-		if (!val.id || !val.players || !val.board || !val.created_at || !val.single_player || !val.session_type) {
-			throw new Error('GameSession: val is not a valid GameSession object');
-		}
-
-		const obj = {
-			id: val.id,
-			players: val.players,
-			board: val.board,
-			created_at: val.created_at,
-			single_player: val.single_player,
-			session_type: val.session_type
-		};
-
-		if (val.time_left) {
-			obj.time_left = val.time_left;
-		}
-
-		if (val.ended_at) {
-			obj.ended_at = val.ended_at;
-		}
-
-		return obj;
-	}
-}
-
-mongoose.Schema.Types.GameSession = GameSession;
 mongoose.Schema.Types.GamePlayer = GamePlayer;
 mongoose.Schema.Types.UserRoleType = UserRoleType;
 
@@ -125,6 +88,17 @@ export type BoardSolution = {
 export type ScoreEvent = {
 	selectionStatus: WordSelectionState
 	word: string;
+	points: number;
+};
+
+export type SelectionEvent = {
+	letter: string;
+	letterRow: number;
+	letterColumn: number;
+	letterIndex: number;
+
+	selectionStatus: WordSelectionState;
+	wholeWord: string;
 	points: number;
 };
 
@@ -196,12 +170,15 @@ export class Board {
 	get_from_pos = (pos: Position): string => {
 		return this.get_from_coords(pos.x, pos.y);
 	};
+
 	get_from_coords = (x: number, y: number): string => {
 		return this.board[x][y];
 	};
+
 	set_from_pos = (pos: Position, value: string): void => {
 		this.set_from_coords(pos.x, pos.y, value);
 	};
+
 	set_from_coords = (y: number, x: number, value: string): void => {
 		this.board[x][y] = value;
 	};
@@ -226,9 +203,31 @@ export class Board {
 		return this.possible_solutions;
 	};
 
+	is_solution = (word: string): boolean => {
+		return this.possible_solutions.some((solution) => solution.word.toUpperCase() === word.toUpperCase());
+	}
+
 	get_total_possible_score = (): number => {
 		return this.total_possible_score;
 	};
+
+	toJSON = (): string => {
+		return JSON.stringify({
+			size: this.size,
+			board: this.board,
+			possible_solutions: this.possible_solutions,
+			total_possible_score: this.total_possible_score
+		});
+	}
+
+	static fromJSON = (json: string): Board => {
+		const obj = JSON.parse(json);
+		const board = new Board(obj.size);
+		board.board = obj.board;
+		board.possible_solutions = obj.possible_solutions;
+		board.total_possible_score = obj.total_possible_score;
+		return board;
+	}
 }
 
 declare const BoardSolution: {

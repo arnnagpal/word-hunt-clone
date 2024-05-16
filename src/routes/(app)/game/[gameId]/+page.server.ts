@@ -1,7 +1,7 @@
 import {fail, redirect} from "@sveltejs/kit";
 import type {PageServerLoad} from "./$types";
-import {gameRepository} from "$lib/server/redis";
-import type {Board} from "ambient";
+import {gamePlayerRepository, gameRepository, type RedisGame, type RedisGamePlayer} from "$lib/server/redis";
+import { SessionType } from "ambient";
 
 export const load: PageServerLoad = async (event) => {
     const user = event.locals.user;
@@ -22,6 +22,11 @@ export const load: PageServerLoad = async (event) => {
         redirect(302, "/app");
     }
 
+    if (gameEntity.session_type == SessionType.Finished) {
+        console.log("Game is already finished");
+        redirect(302, "/app");
+    }
+
     if (!gameEntity.timer) {
         return fail(500, {"message": "Game timer not found"});
     }
@@ -30,21 +35,43 @@ export const load: PageServerLoad = async (event) => {
         return fail(500, {"message": "Game board not found"});
     }
 
-    // retrieve board from game
-    const board = JSON.parse(gameEntity.board as string) as Board;
+    // get game player
+    const gamePlayer = await gamePlayerRepository.search()
+        .where('game_id').eq(params.gameId)
+        .where('id').eq(user.id)
+        .returnFirst();
 
-    let timer = gameEntity.timer as number;
-    if (timer > 0) {
-        const now = Date.now();
-        const ended_at = (gameEntity.ended_at as Date).getTime() / 1000;
-        timer = (ended_at - now) / 1000;
-        if (timer < 0) {
-            redirect(302, "/app");
-        }
+    if (!gamePlayer) {
+        console.log("Game player not found for user", user.id);
+        redirect(302, "/app");
     }
-    event.depends('app:random');
+
+    const redisGame = {
+        id: gameEntity.id,
+        players: gameEntity.players,
+        board: gameEntity.board,
+        timer: gameEntity.timer,
+        created_at: gameEntity.created_at,
+        ended_at: gameEntity.ended_at,
+        single_player: gameEntity.single_player,
+        session_type: gameEntity.session_type
+    };
+
+    const redisGamePlayer = {
+        id: gamePlayer.id,
+        game_id: gamePlayer.game_id,
+        name: gamePlayer.name,
+        word_bank: gamePlayer.word_bank,
+        letters_selected: gamePlayer.lettersSelected,
+        time_left: gamePlayer.time_left,
+        score: gamePlayer.score
+    };
+
     return {
-        time: timer,
-        board: board as Board
+        game_id: params.gameId,
+        game: redisGame,
+        player: redisGamePlayer,
+        auth_session: event.locals.session,
+        auth_user: event.locals.user
     };
 };

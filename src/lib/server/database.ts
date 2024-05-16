@@ -101,11 +101,11 @@ const gameSchema =
 				required: true
 			},
 			created_at: {
-				type: Date,
+				type: Number,
 				required: true
 			},
 			ended_at: {
-				type: Date,
+				type: Number,
 				required: false
 			},
 			single_player: {

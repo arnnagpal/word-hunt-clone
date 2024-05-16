@@ -1,7 +1,7 @@
 import {error, json, type RequestHandler} from '@sveltejs/kit';
 import {generateIdFromEntropySize} from "lucia";
 import {SessionType} from "ambient";
-import {gameRepository} from "$lib/server/redis";
+import {gamePlayerRepository, gameRepository} from "$lib/server/redis";
 import {createBoard} from "../../createboard/+server";
 import {User} from "$lib/server/database";
 
@@ -34,33 +34,30 @@ export const POST: RequestHandler = async ({request}) => {
 
     const game_id = generateIdFromEntropySize(10);
 
-    timer += 5; // add 5 seconds to the timer for the game to start
-
-    const start_date = Date.now();
-    const end_date = new Date(start_date);
-    end_date.setTime(end_date.getTime() + timer * 1000);
-
     let game = {
         id: game_id,
         session_type: SessionType.Active,
         timer: timer,
         players: [auth_token],
-        playerData: JSON.stringify(
-            [
-                {
-                    id: auth_token,
-                    score: 0
-                }
-            ]
-        ),
         winner: "",
-        board: JSON.stringify(board),
+        board: board.toJSON(),
         created_at: Date.now(),
-        ended_at: timer > 0 ? end_date.getTime() : 0,
+        ended_at: 0,
         single_player: single
     };
 
+    let gamePlayer = {
+        id: auth_token,
+        game_id: game_id,
+        name: user.name,
+        word_bank: [],
+        letters_selected: [],
+        time_left: timer,
+        score: 0
+    };
+
     await gameRepository.save(game);
+    await gamePlayerRepository.save(gamePlayer);
 
     return json({
         game_id

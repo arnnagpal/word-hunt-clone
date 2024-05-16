@@ -3,15 +3,65 @@
     import {onMount} from "svelte";
     import type {PageData} from "./$types";
     import {Button} from "$lib/components/ui/button";
-    import { LogOut } from 'lucide-svelte';
     import LogoutButton from "$lib/components/logout/LogoutButton.svelte";
+	import { GamePreset } from "ambient";
+	import { goto } from "$app/navigation";
 
     onMount(() => {
         console.log("Dashboard page loaded");
     });
 
-    function logout() {
+    
+    async function createSingleGame(preset: GamePreset) {
+        console.log("Creating game with preset: " + preset);
+        
+        const response = await fetch("/api/game/create", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ 
+                "auth_token": data.user.id,
+                "timer": preset,
+                "single": true
+            }),
+        });
 
+        if (response.ok) {
+            const game = await response.json();
+
+            setTimeout(() => {
+                console.log("Game created: " + game.game_id);
+                goto("/game/" + game.game_id);
+            }, 100);
+        } else {
+            console.error("Failed to create game: " + response.status);
+        }
+    }
+
+    async function joinQueue() {
+        console.log("Joining queue");
+
+        const response = await fetch("/api/game/join", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ 
+                "auth_token": data.user.id,
+            }),
+        });
+
+        if (response.ok) {
+            const game = await response.json();
+
+            setTimeout(() => {
+                console.log("Game joined: " + game.game_id);
+                goto("/game/" + game.game_id);
+            }, 100);
+        } else {
+            console.error("Failed to join queue: " + response.status);
+        }
     }
 
     export let data: PageData;
@@ -45,22 +95,22 @@
             <Label class="text-xl font-bold text-center mb-1">SINGLEPLAYER</Label>
             <Button class="transition-all duration-200 ease-in-out
                  text-gray-900 text-xl
-                       rounded mb-2" href="/" variant="default"> Classic
+                       rounded mb-2" variant="default" on:click={async () => await createSingleGame(GamePreset.Classic)}> Classic
             </Button>
             <Button class="transition-all duration-200 ease-in-out
                  text-gray-900 text-xl
-                      rounded mb-4" href="/" variant="default"> Unlimited
+                      rounded mb-4" variant="default" on:click={async () => await createSingleGame(GamePreset.Unlimited)}> Unlimited
             </Button>
 
             <Label class="text-xl font-bold text-center mb-1">MULTIPLAYER</Label>
             <Button class="transition-all duration-200 ease-in-out
                  text-gray-900 text-xl
-                       rounded mb-2" href="/" variant="default"> Quick Play
+                       rounded mb-2" variant="default" on:click={joinQueue}> Quick Play
             </Button>
 
             <Button class="transition-all duration-200 ease-in-out
-                 text-gray-900 text-xl
-                       rounded mb-4" href="/" variant="default"> Create a Game
+                 text-gray-900 text-xl hover:bg-gray-200 bg-gray-200
+                       rounded mb-4" variant="default"> Create a Game (WIP)
             </Button>
         </div>
 

@@ -4,7 +4,7 @@ import {lucia} from "$lib/server/auth";
 import {superValidate} from "sveltekit-superforms";
 import {zod} from "sveltekit-superforms/adapters";
 import {z} from "zod";
-import type {User} from "lucia";
+import type {Session, User} from "lucia";
 
 export const load: PageServerLoad = async (event) => {
     const user = event.locals.user;
@@ -12,9 +12,15 @@ export const load: PageServerLoad = async (event) => {
         redirect(302, "/login");
     }
 
+    const session = event.locals.session;
+    if (!session) {
+        redirect(302, "/login");
+    }
+
     return {
         form: await superValidate(zod(z.object({}))),
-        user: user as User
+        user: user as User,
+        session: session as Session
     };
 };
 

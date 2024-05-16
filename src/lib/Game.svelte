@@ -2,7 +2,7 @@
     import {createEventDispatcher, onDestroy, onMount} from "svelte";
     import Line from "$lib/Line.svelte";
 
-    import {Board, getPoints, type ScoreEvent, WordSelectionState} from "ambient";
+    import {Board, getPoints, type ScoreEvent, WordSelectionState, type SelectionEvent} from "ambient";
 
     export let board: Board;
 
@@ -164,7 +164,16 @@
         await checkWord();
 
         const word = selected.map((value) => grid[Math.floor(value / columns)][value % columns]).join('');
-        dispatch('selection', {selectionStatus: selectionStatus, word: word, points: getPoints(word)} as ScoreEvent);
+        dispatch('selection', {
+            letter: grid[r][c],
+            letterRow: r,
+            letterColumn: c,
+            letterIndex: selected.length - 1,
+
+            selectionStatus: selectionStatus, 
+            wholeWord: word, 
+            points: getPoints(word)
+        } as SelectionEvent);
 
         eraseLines();
         drawLines();

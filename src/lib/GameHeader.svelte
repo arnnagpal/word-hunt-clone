@@ -1,35 +1,16 @@
 <script lang="ts">
     import {createEventDispatcher, onMount} from "svelte";
-    import type {TimeOverEvent} from "ambient";
+    import {UpdateType, type TimeOverEvent} from "ambient";
 
     export let words: number = 0;
     export let score: number = 0;
 
     export let time = -1;
 
-    const dispatch = createEventDispatcher();
-
     let displayScore = score;
     let oldScore = score;
 
     let animatingInterval: NodeJS.Timeout | null = null;
-
-    onMount(() => {
-        if (time === -1) return;
-
-        const timer = setInterval(() => {
-            time--;
-
-            if (time === 0) {
-                dispatch('timeup', {"words": words, "score": score} as TimeOverEvent);
-                clearInterval(timer);
-            }
-        }, 1000);
-
-        return () => {
-            clearInterval(timer);
-        }
-    });
 
     function fancyTimeFormat(duration: number) {
         const hrs = ~~(duration / 3600);
