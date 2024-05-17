@@ -1,7 +1,10 @@
 import {fail, redirect} from "@sveltejs/kit";
-import type {PageServerLoad} from "./$types";
+import type {Actions, PageServerLoad} from "./$types";
 import {gamePlayerRepository, gameRepository, type RedisGame, type RedisGamePlayer} from "$lib/server/redis";
-import { SessionType } from "ambient";
+import { SessionType, UpdateType } from "ambient";
+import {superValidate} from "sveltekit-superforms";
+import {zod} from "sveltekit-superforms/adapters";
+import {z} from "zod";
 
 export const load: PageServerLoad = async (event) => {
     const user = event.locals.user;
@@ -68,10 +71,58 @@ export const load: PageServerLoad = async (event) => {
     };
 
     return {
+        form: await superValidate(zod(z.object({}))),
         game_id: params.gameId,
         game: redisGame,
         player: redisGamePlayer,
         auth_session: event.locals.session,
         auth_user: event.locals.user
     };
+};
+
+export const actions: Actions = {
+    exit: async (event) => {
+        if (!event.locals.session) {
+            throw fail(401);
+        }
+
+        // add fake delay to simulate slow network
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        const gameId = event.params.gameId;
+        const session = event.locals.session;
+
+        // make an update request to the game
+        const response = await event.fetch(`/api/game/update`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "game_id": gameId,
+                "auth_token": session.id,
+                "update_type": UpdateType.TimeUpdate,
+                "update_data": {
+                    "time_left": 0
+                }
+            })
+        });
+
+        if (response.ok) {
+            const updatedGame = await response.json();
+
+            if (updatedGame.game_status === SessionType[SessionType.Finished]) {
+                console.log('Game finished');
+                // redirect to game over page (or for now, just go back to dashboard)
+                redirect(302, "/app");
+            } else {
+                console.log('Game updated');
+
+                // redirect to dashboard
+                redirect(302, "/app");
+            }
+        } else {
+            console.error('Failed to update time');
+        }
+    },
 };

@@ -241,7 +241,7 @@
 
     <div class="flex flex-col items-center h-1/4">
         <!--		game header   -->
-        <GameHeader bind:score={score} bind:words={wordCount} bind:time={timer}/>
+        <GameHeader data={data} bind:score={score} bind:words={wordCount} bind:time={timer}/>
     </div>
 
     <div class="flex flex-col items-center w-screen h-[15vh] mt-20">

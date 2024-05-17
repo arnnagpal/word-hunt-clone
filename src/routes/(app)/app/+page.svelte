@@ -77,12 +77,6 @@
         <div class="flex justify-center flex-col bg-white w-[85vw] max-w-[440px] rounded-lg shadow-2xl px-6 py-3">
             <div class="flex justify-center flex-col pb-5">
                 <div class="relative pt-2">
-
-<!--                    <Button class="absolute top-0 left-0 rotate-180 transition-all duration-200 ease-in-out-->
-<!--                 text-gray-900 text-4xl-->
-<!--                      font-bold rounded mt-[26px]" href="/" variant="ghost" on:click={logout} >-->
-
-<!--                    </Button>-->
                     <div class="absolute top-0 left-0 mt-[26px]">
                         <LogoutButton data={data} />
                     </div>

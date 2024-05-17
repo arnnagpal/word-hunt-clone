@@ -2,7 +2,7 @@ import { error, json, type RequestHandler } from '@sveltejs/kit';
 import { lucia } from '$lib/server/auth';
 import { gamePlayerRepository, gameRepository } from "$lib/server/redis";
 import { Board, SessionType, UpdateType, getPoints } from "ambient";
-import { Game } from '$lib/server/database';
+import { Game, User } from '$lib/server/database';
 import { EntityId } from 'redis-om';
 
 export const POST: RequestHandler = async ({ request }) => {
@@ -210,6 +210,11 @@ export const POST: RequestHandler = async ({ request }) => {
                         }
                     }
 
+                    if (maxScore === 0) {
+                        // winner is the first player in the list
+                        winner = <string>gamePlayers[0].id;
+                    }
+
                     game.winner = winner;
                     game.ended_at = Date.now();
                     game.session_type = SessionType.Finished;
@@ -239,6 +244,13 @@ export const POST: RequestHandler = async ({ request }) => {
                     });
 
                     await mongoGame.save();
+
+                    const user = session.user;
+                    const mongoUser = await User.findOne({_id: user.id}).exec();
+                    if (mongoUser) {
+                        mongoUser.games.push(game_id);
+                        await mongoUser.save();
+                    }
 
                     // delete the game from redis
                     if (game[EntityId]) {

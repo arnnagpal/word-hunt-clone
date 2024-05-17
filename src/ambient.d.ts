@@ -54,8 +54,8 @@ export class GamePlayer extends mongoose.SchemaType {
 		}
 
 		// check if val is a valid GamePlayer object
-		if (!val.id || !val.words || !val.score) {
-			throw new Error('GamePlayer: val is not a valid GamePlayer object');
+		if (!val.id || !val.words || typeof(val.score) !== 'number') {
+			throw new Error('GamePlayer: val is not a valid GamePlayer object, types: ' + typeof(val.id) + ', ' + typeof(val.words) + ', ' + typeof(val.score) + ', ' + typeof(val.lettersSelected) + ', ' + typeof(val.time_left) + ', ' + typeof(val.score));
 		}
 
 		return {

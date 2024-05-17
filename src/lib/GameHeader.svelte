@@ -1,11 +1,12 @@
 <script lang="ts">
-    import {createEventDispatcher, onMount} from "svelte";
-    import {UpdateType, type TimeOverEvent} from "ambient";
+	import ExitButton from "./components/exit/ExitButton.svelte";
 
     export let words: number = 0;
     export let score: number = 0;
 
     export let time = -1;
+
+    export let data: any;
 
     let displayScore = score;
     let oldScore = score;
@@ -69,7 +70,12 @@
 <div class="flex flex-col">
     <!-- game header with the score, and words count text -->
     <!-- svelte + tailwind -->
-    <div class="flex justify-center items-center bg-white w-[74vw] h-20 rounded-b-xl">
+
+    <div class="flex justify-center items-center bg-white w-[90vw] max-w-[420px] h-20 rounded-b-xl relative">
+        <div class="absolute top-0 left-0 mt-[20px]">
+            <ExitButton data={data} />
+        </div>
+
         <div class="flex flex-col text-left">
             <p class="text-xl font-extrabold -mb-2">WORDS: {words}</p>
             <p class="text-3xl font-extrabold">SCORE: {Math.round(displayScore).toString().padStart(4, '0')}</p>
@@ -78,7 +84,7 @@
 
     <!--    on the right side of the game header -->
     {#if time > -1}
-        <div class="flex justify-center items-center bg-green-950 bg-opacity-40 text-white text-center w-[18vw] rounded-b-xl ml-auto mr-4">
+        <div class="flex justify-center items-center bg-green-950 bg-opacity-40 text-white text-center w-[20vw] max-w-[120px] rounded-b-xl ml-auto mr-4">
             <p class="text-md font-bold pb-0.5">{fancyTimeFormat(time)}</p>
         </div>
     {/if}
