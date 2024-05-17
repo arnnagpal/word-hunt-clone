@@ -6,7 +6,7 @@ processed_file = "dictionary\\csw21.json"
 distribution_output = "dictionary\\letter_distribution.json"
 
 def min_length(word):
-    return len(word) > 3
+    return len(word) >= 3
 
 # filters to apply to the words list
 filters = [
