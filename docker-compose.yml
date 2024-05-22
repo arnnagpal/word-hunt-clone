@@ -1,0 +1,35 @@
+services:
+  user-service:
+    build: ./user-service
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./user-service:/app
+    working_dir: /app
+    command: npm run dev
+    image: node:21
+
+  game-service:
+    build: ./game-service
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./game-service:/app
+    working_dir: /app
+    command: npm run dev
+    depends_on:
+      - user-service
+    image: node:21
+
+  matchmaking-service:
+    build: ./matchmaking-service
+    ports:
+      - "3002:3002"
+    volumes:
+      - ./matchmaking-service:/app
+    working_dir: /app
+    command: npm run dev
+    depends_on:
+      - user-service
+      - game-service
+    image: node:21

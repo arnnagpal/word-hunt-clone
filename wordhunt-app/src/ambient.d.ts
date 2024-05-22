@@ -5,8 +5,8 @@ export enum UpdateType {
 	LetterSelection,
 	ClearSelection,
 	SubmitSelection,
-	TimeUpdate,
-	JoinedGame
+	StartTimer,
+	JoinedGame,
 }
 
 export enum GamePreset {

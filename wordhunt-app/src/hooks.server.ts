@@ -4,7 +4,6 @@ import type { Handle } from '@sveltejs/kit';
 import { lucia } from '$lib/server/auth';
 import {redis} from "$lib/server/redis";
 
-
 console.log("hooks.server - starting sveltekit server");
 console.log("hooks.server - reading dictionary file");
 
@@ -30,6 +29,8 @@ Object.keys(letterFrequencyJson).forEach((key) => {
 console.log("hooks.server - letter frequency loaded");
 console.log("hooks.server - letter frequency: ", letterFrequency);
 console.log("hooks.server - sveltekit server started");
+
+console.log(`Redis ping: ${await redis.ping()}`);
 
 export const handle: Handle = async ({ event, resolve }) => {
     const sessionId = event.cookies.get(lucia.sessionCookieName);
@@ -61,4 +62,6 @@ export const handle: Handle = async ({ event, resolve }) => {
     return resolve(event);
 };
 
-console.log(`Redis ping: ${await redis.ping()}`);
+console.log("hooks.server - starting socket.io server");
+
+

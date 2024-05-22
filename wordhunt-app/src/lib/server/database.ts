@@ -46,6 +46,20 @@ const userSchema =
 				type: String,
 				required: true
 			},
+
+			// glicko-2 rating system			
+			rating: {
+				type: Number,
+				required: true
+			},
+			rating_deviation: {
+				type: Number,
+				required: true
+			},
+			rating_volatility: {
+				type: Number,
+				required: true
+			},
 			games: {
 				type: [String],
 				required: true

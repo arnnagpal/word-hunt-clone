@@ -28,7 +28,8 @@ declare module 'lucia' {
 			username: string;
 			display_name: string;
 			email: string;
-			role: UserRoleType
+			role: UserRoleType;
+			rating: number;
 		};
 	}
 }

@@ -172,15 +172,11 @@ export const POST: RequestHandler = async ({ request }) => {
             gamePlayerRepository.save(gamePlayer);
 
             break;
-        case UpdateType.TimeUpdate:
+        case UpdateType.StartTimer:
             if (!gamePlayer) {
                 return error(400, 'Invalid game player');
             }
             if (typeof(gamePlayer.time_left) !== 'number') {
-                return error(400, 'Invalid time left data');
-            }
-
-            if (typeof(update_data.time_left) !== 'number') {
                 return error(400, 'Invalid time left data');
             }
 

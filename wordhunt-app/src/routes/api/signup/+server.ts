@@ -48,6 +48,9 @@ export const POST: RequestHandler = async ({request}) => {
         username: username,
         display_name: displayName,
         password_hash: passwordHash,
+        rating: 1500,
+        rating_deviation: 200,
+        rating_volatility: 0.06,
         games: [],
         role: UserRole.User
     });
