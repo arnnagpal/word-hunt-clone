@@ -6,7 +6,7 @@ if (!process.env.REDIS_URL) {
     dotenv.config();
 }
 
-let connectionString = process.env.REDIS_URL;
+const connectionString = process.env.REDIS_URL;
 
 if (!connectionString) {
     throw new Error('REDIS_URL is not defined');

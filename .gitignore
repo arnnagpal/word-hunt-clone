@@ -5,5 +5,7 @@
 */.git
 */.env
 
+*/pnpm-lock.yaml
+
 .DS_Store
 */.DS_Store
